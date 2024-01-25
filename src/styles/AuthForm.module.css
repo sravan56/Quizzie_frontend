@@ -1,0 +1,122 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Jomhuria&family=Poppins:wght@600&family=Roboto:wght@500&display=swap');
+
+.authContainer {
+    max-width: 60%;
+    height:70vh;
+    margin:100px  100px 80px 300px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 30px 0px #00000026;
+  }
+.authContainer h1{
+    font-family: 'Jomhuria', serif;
+    font-weight:400;
+    font-size:100px;
+    line-height:100px;
+    color:#474444;
+    margin: 10px 10px;
+}
+  
+  .toggleButtons {
+    display: flex;
+    margin-bottom: 30px;
+    width:50%;
+    justify-items: center;
+    gap:20px;
+    margin-left:25%;
+
+  }
+  
+  .toggleButtons button {
+    flex: 1;
+    padding: 4px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: black;
+    
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline:none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+  }
+  
+  .toggleButtons button.active {
+    background-color: #ffffff;
+    color: black;
+    box-shadow: 0px 0px 50px 0px #0019FF3D;
+  }
+  .formContainer{
+    
+    justify-content: space-between;
+  }
+  .formGroup {
+    margin-top:20px;
+    margin-bottom: 15px;
+    display:flex;
+    margin-right:27%;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap:30px;
+
+    
+
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    text-align:right;
+  }
+  
+  input {
+    width: 50%;
+    height:5vh;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border:none;
+    outline:none;
+    background: #F4F4f4;
+    border-radius:5px 5px 0px 0px;
+    text-align: justify;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    
+  }
+  
+  .errorMessage {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
+  .btn {
+    background-color: #a9bcff;
+    color: #000000;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline:none;
+    width:20%;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+
+  }
+  
+  .btn:hover {
+    background-color: #a9bcff;
+  }
+  

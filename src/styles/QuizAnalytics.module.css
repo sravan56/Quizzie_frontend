@@ -1,0 +1,55 @@
+.activeContainer{
+    margin:30px;
+
+}
+.activeContainer h1{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 42px;
+    color:#5076FF;
+}
+table{
+    border-collapse: collapse;
+    width:70%;
+    margin: auto;
+   
+
+
+}
+tr{
+    border-radius: 5px;
+}
+th,td{
+    text-align: left;
+    padding: 10px;
+    
+    
+}
+tr:nth-child(even){
+    background-color: #B3C4FF;
+    
+}
+th{
+    background-color: #5076FF;
+    color:white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+}
+td{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    color:black;
+}
+td:first-child,
+th:first-child{
+    border-radius: 10px 0 0 10px;
+}
+td:last-child,
+th:last-child{
+    border-radius: 0 10px 10px 0;
+}
