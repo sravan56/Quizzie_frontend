@@ -4,14 +4,21 @@ import style from "../styles/QuizAnalytics.module.css";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { IoMdShare } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer,toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Modal from "react-modal";
+import { Link } from "react-router-dom";
+import QuestionWiseAnalysis from "./QuestionWiseAnalysis";
+import QuizCreate from "./QuizCreate";
 
 const QuizAnalytics = () => {
   const [quizzes, setQuizzes] = useState([]);
-
-  const navigate = useNavigate("");
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [quizToDelete, setQuizToDelete] = useState(null);
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
+  const [showAnalysis, setShowAnalysis] = useState("Analytics");
+  const [editQuizDetails, setEditQuizDetails] = useState(null);
+  const [showCreateQuiz, setShowCreateQuiz] = useState(false);
 
   const fetchQuizzes = async () => {
     try {
@@ -40,76 +47,159 @@ const QuizAnalytics = () => {
       return "Invalid Date";
     }
 
-    return date.toLocaleDateString("en-IN", options);
+    return date
+      .toLocaleDateString("en-IN", options)
+      .replace(/(\d+)-(\w+)-(\d+)/, "$1 $2, $3");
   };
-  
 
-  const handleEditQuiz = (quizId) => {
-    navigate("/");
-  };
-  const handleDeleteQuiz = async (quizId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this quiz?"
-    );
-
-    if (confirmed) {
-      try {
-        await axios.delete(
-          `http://localhost:5000/api/quiz/deletequiz/${quizId}`
-        );
-        toast.success('Quiz deleted successfully!', {
-            position: 'top-right',
-            autoClose: 3000, // Adjust as needed
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-        fetchQuizzes();
-      } catch (error) {
-        console.error("Error deleting quiz:", error);
-      }
+  const handleEditQuiz = async (quizId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/quiz/getquiz/${quizId}`
+      );
+      setEditQuizDetails(response.data);
+      // Open QuizCreate component for editing
+      setShowCreateQuiz(true);
+    } catch (error) {
+      console.error("Error fetching quiz details:", error);
     }
   };
-  const handleShareQuiz = (quizId) => {};
+
+  const handleCloseCreateQuiz = () => {
+    setShowCreateQuiz(false);
+  };
+  const handleOpenDeleteModal = (quizId) => {
+    setQuizToDelete(quizId);
+    setDeleteModalIsOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setQuizToDelete(null);
+    setDeleteModalIsOpen(false);
+  };
+  const handleDeleteQuiz = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/quiz/deletequiz/${quizToDelete}`
+      );
+      toast.success("Quiz deleted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      fetchQuizzes();
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+    } finally {
+      setQuizToDelete(null);
+      setDeleteModalIsOpen(false);
+    }
+  };
+  const handleShareQuiz = (quizId) => {
+    const quizLink = `https://quiz-app-form.vercel.app/quizform/${quizId}`;
+    navigator.clipboard.writeText(quizLink);
+    toast.success("Quiz link copied to clipboard!", {
+      position: "top-right",
+      autoClose: 3000, // Adjust as needed
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const handleShowQuestionAnalysis = (quizId) => {
+    // Toggle visibility of question-wise analysis for the selected quiz
+    setShowAnalysis("Analysis");
+    setSelectedQuizId(selectedQuizId === quizId ? null : quizId);
+  };
+
   return (
     <div className={style.activeContainer}>
-      <h1>Quiz Analysis</h1>
-      <ToastContainer/>
-      <div className={style.tableContainer}>
-        <table>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Quiz Name</th>
-              <th>Created on</th>
-              <th>Impression</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {quizzes.map((quiz, index) => (
-              <tr key={quiz._id}>
-                <td>{index + 1}</td>
-                <td>{quiz.quizName}</td>
-                <td>{formatDate(quiz.createdDate)}</td>
-                <td>Impression</td>
-                <td onClick={() => handleEditQuiz(quiz._id)}>
-                  <FaRegEdit />
-                </td>
-                <td onClick={() => handleDeleteQuiz(quiz._id)}>
-                  <RiDeleteBinFill />
-                </td>
-                <td onClick={() => handleShareQuiz(quiz._id)}>
-                  <IoMdShare />
-                </td>
-                <td>Question Wise Analysis</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {showAnalysis === "Analytics" && (
+        <>
+          <h1>Quiz Analysis</h1>
+          <ToastContainer />
+          <div className={style.tableContainer}>
+            <table>
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Quiz Name</th>
+                  <th>Created on</th>
+                  <th>Impression</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {quizzes.map((quiz, index) => (
+                  <tr key={quiz._id}>
+                    <td>{index + 1}</td>
+                    <td>{quiz.quizName}</td>
+                    <td>{formatDate(quiz.createdDate)}</td>
+                    <td>{quiz.impressions}</td>
+                    <td onClick={() => handleEditQuiz(quiz._id)}>
+                      <FaRegEdit />
+                    </td>
+                    <td onClick={() => handleOpenDeleteModal(quiz._id)}>
+                      <RiDeleteBinFill />
+                    </td>
+                    <td onClick={() => handleShareQuiz(quiz._id)}>
+                      <IoMdShare />
+                    </td>
+                    <td>
+                      <Link
+                        className={style.analysisLink}
+                        onClick={() => handleShowQuestionAnalysis(quiz._id)}
+                      >
+                        QuestionWiseAnalysis
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Modal
+            isOpen={deleteModalIsOpen}
+            onRequestClose={handleCloseDeleteModal}
+            contentLabel="Delete Confirmation"
+            className={style.modal}
+            overlayClassName={style.overlay}
+          >
+            <p>
+              Are you Confirm you <br />
+              Want to delete?
+            </p>
+            <button className={style.deleteBtn} onClick={handleDeleteQuiz}>
+              Confirm Delete
+            </button>
+            <button
+              className={style.cancelBtn}
+              onClick={handleCloseDeleteModal}
+            >
+              Cancel
+            </button>
+          </Modal>
+        </>
+      )}
+      {showAnalysis === "Analysis" && selectedQuizId && (
+        <QuestionWiseAnalysis quizId={selectedQuizId} />
+      )}
+      {showCreateQuiz && (
+        <QuizCreate
+          isOpen={showCreateQuiz}
+          onRequestClose={handleCloseCreateQuiz}
+          quizDetails={editQuizDetails}
+        />
+      )}
     </div>
   );
 };

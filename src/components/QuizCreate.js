@@ -1,16 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import style from "../styles/QuizCreate.module.css";
 
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import axios from "axios";
-import  {ToastContainer,toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IoMdShare } from "react-icons/io";
 
-
-
-
-const QuizCreate = ({isOpen,onRequestClose}) => {
+const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quizName, setQuizName] = useState("");
   const [quizType, setQuizType] = useState("");
@@ -19,16 +17,46 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
     {
       questionText: "",
       optionType: "Text",
-      options: [{ optionText: "", isCorrect: false ,optionType:"Text"}],
-      timerType: "5s", 
+      options: [
+        { optionText: "", imageUrl: "", isCorrect: false, optionType: "Text" },
+      ],
+      timerType: "5s",
     },
   ]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [quizId, setQuizId] = useState("");
 
- useEffect(() => {
+  useEffect(() => {
     setIsModalOpen(isOpen);
-  }, [isOpen]);
-  
+
+    if(quizDetails){
+    setQuizName(quizDetails.quizName);
+      setQuizType(quizDetails.quizType);
+      setQuestions(quizDetails.questions || []);
+      setQuizId(quizDetails._id);
+    } else {
+      // If creating a new quiz, reset the form fields
+      setQuizName("");
+      setQuizType("");
+      setQuestions([
+        {
+          questionText: "",
+          optionType: "Text",
+          options: [
+            {
+              optionText: "",
+              imageUrl: "",
+              isCorrect: false,
+              optionType: "Text",
+            },
+          ],
+          timerType: "5s",
+        },
+      ]);
+      setQuizId("");
+    }
+  }, [isOpen,quizDetails]);
+
   const closeModal = () => {
     setIsModalOpen(false);
     onRequestClose();
@@ -37,21 +65,39 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
       {
         questionText: "",
         optionType: "Text",
-        options: [{ optionText: "", isCorrect: false,optionType:"Text" }],
+        options: [
+          {
+            optionText: "",
+            imageUrl: "",
+            isCorrect: false,
+            optionType: "Text",
+          },
+        ],
         timerType: "5s",
       },
     ]);
+    setQuizId("");
   };
 
   const createQuiz = async (quizData) => {
     try {
-      const response = await axios.post(
+      let response;
+      if(quizDetails){
+        response=await axios.put(
+          `http://localhost:5000/api/quiz/editquiz/${quizId}`,quizData
+        );
+      }else{
+       response = await axios.post(
         "http://localhost:5000/api/quiz/create",
         quizData
       );
-      console.log(response.data); 
+       }
+
+      setQuizId(response.data._id);
+      console.log(response.data);
+      toast.success("QuizCreated?updated  succesfully");
     } catch (error) {
-      console.error(error); 
+      console.error("Error Creating /updating Quiz:",error);
     }
   };
 
@@ -63,16 +109,16 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
       if (quizName && quizType) {
         setCurrentStep(2);
       } else {
-        toast.error("Please provide Quiz Name and Type.",{position: 'top-right',
-        autoClose: 3000, 
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+        toast.error("Please provide Quiz Name and Type.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } else {
-      
       const quizData = {
         quizName,
         quizType,
@@ -81,7 +127,7 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
       createQuiz(quizData);
       console.log("Submit Quiz:", { quizName, quizType });
       console.log("quiz questions", { questions });
-      closeModal();
+      setCurrentStep(3);
     }
   };
 
@@ -92,25 +138,33 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
         {
           questionText: "",
           optionType: "Text",
-          options: [{ optionText: "", isCorrect: false,optionType:"Text"}],
+          options: [
+            {
+              optionText: "",
+              imageUrl: "",
+              isCorrect: false,
+              optionType: "Text",
+            },
+          ],
           timerType: "5s",
         },
       ]);
       setCurrentQuestion(questions.length);
     } else {
-      toast("Maximum 5 questions are allowed.",{position: 'top-right',
-      autoClose: 3000, // Adjust as needed
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+      toast("Maximum 5 questions are allowed.", {
+        position: "top-right",
+        autoClose: 3000, // Adjust as needed
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   const handleQuestionChange = (text) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[currentQuestion].questionText = text||"";
+    updatedQuestions[currentQuestion].questionText = text || "";
     setQuestions(updatedQuestions);
   };
 
@@ -137,27 +191,39 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
 
   const handleAddOption = () => {
     const updatedQuestions = [...questions];
+    const currentOptionType = questions[currentQuestion].options[0].optionType;
+    console.log("optionTyep", currentOptionType);
+
     if (updatedQuestions[currentQuestion].options.length < 4) {
-      updatedQuestions[currentQuestion].options.push({
+      const newOption = {
+        optionType: currentOptionType,
         optionText: "",
-        isCorrect:false,
-        optionType:"Text",
+        imageUrl: "",
+        isCorrect: false,
+      };
+
+      // Update optionType for all existing options
+      updatedQuestions[currentQuestion].options.forEach((option) => {
+        option.optionType = currentOptionType;
       });
+
+      updatedQuestions[currentQuestion].options.push(newOption);
       setQuestions(updatedQuestions);
     } else {
-      toast("Maximum 4 options are allowed for each question.",{position: 'top-right',
-      autoClose: 3000, // Adjust as needed
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+      toast("Maximum 4 options are allowed for each question.", {
+        position: "top-right",
+        autoClose: 3000, // Adjust as needed
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
   const handleOptionImageChange = (value, optionIndex) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[currentQuestion].options[optionIndex].imageURL = value;
+    updatedQuestions[currentQuestion].options[optionIndex].imageUrl = value;
     setQuestions(updatedQuestions);
   };
 
@@ -177,7 +243,7 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
   };
 
   const renderOptions = () => {
-    const { options} = questions[currentQuestion];
+    const { options } = questions[currentQuestion];
 
     return options.map((option, optionIndex) => (
       <div key={optionIndex} className={style.optionContainer}>
@@ -203,12 +269,19 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
         )}
 
         {option.optionType === "ImageURL" && (
-          <input
-            type="text"
-            value={option.imageURL}
-            onChange={(e) => handleOptionChange(e.target.value, optionIndex)}
-            placeholder="Image URL"
-          />
+          
+            <input
+              type="text"
+              value={option.imageUrl}
+              onChange={(e) =>
+                handleOptionImageChange(e.target.value, optionIndex)
+              }
+              placeholder="Image URL"
+            />
+           
+
+          
+          
         )}
 
         {option.optionType === "TextAndImageURL" && (
@@ -219,14 +292,18 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
               onChange={(e) => handleOptionChange(e.target.value, optionIndex)}
               placeholder="Text"
             />
-            <input
-              type="text"
-              value={option.imageURL}
-              onChange={(e) =>
-                handleOptionImageChange(e.target.value, optionIndex)
-              }
-              placeholder="Image URL"
-            />
+            
+              <input
+                type="text"
+                value={option.imageUrl}
+                onChange={(e) =>
+                  handleOptionImageChange(e.target.value, optionIndex)
+                }
+                placeholder="Image URL"
+              />
+
+              
+            
           </div>
         )}
 
@@ -302,10 +379,16 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
     }
   };
 
+  const handleShare = () => {
+    // Copy the quiz link to the clipboard
+    const quizLink = `https://quiz-app-form.vercel.app/quizform/${quizId}`;
+    navigator.clipboard.writeText(quizLink);
+    toast.success("Quiz link copied to clipboard!");
+  };
   return (
     <div>
       <div className={style.createQuiz}>
-        <ToastContainer/>
+        <ToastContainer />
         <Modal
           isOpen={isModalOpen}
           onRequestClose={closeModal}
@@ -345,7 +428,7 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
                   <div key={index} className={style.questionNavItem}>
                     <button
                       onClick={() => handleSelectQuestion(index)}
-                      className={index === currentQuestion ? style.active : ""}
+                      className={index === currentQuestion ? style.activeBtn : ""}
                     >
                       {`${index + 1}`}
                     </button>
@@ -385,7 +468,8 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
                       name={`optionType${currentQuestion}`}
                       value="Text"
                       checked={
-                        questions[currentQuestion].options[0].optionType === "Text"
+                        questions[currentQuestion].options[0].optionType ===
+                        "Text"
                       }
                       onChange={() => handleOptionTypeChange("Text", 0)}
                     />
@@ -426,26 +510,37 @@ const QuizCreate = ({isOpen,onRequestClose}) => {
                     </label>
                   </div>
 
-                  
                   {renderOptions()}
 
                   {renderAddOptionButton()}
-
 
                   {renderTimer()}
                 </div>
               )}
             </>
           )}
-          <div className={style.buttonContainer}>
-            <button onClick={closeModal} className={style.cancelBtn}>
-              Cancel
-            </button>
-            <button onClick={handleContinue} className={style.cntdBtn}>
-              {currentStep === 1 ? "Continue" : "Create Quiz"}
-            </button>
-            
-          </div>
+          {currentStep !== 3 && (
+            <div className={style.buttonContainer}>
+              <button onClick={closeModal} className={style.cancelBtn}>
+                Cancel
+              </button>
+              <button onClick={handleContinue} className={style.cntdBtn}>
+                {currentStep === 1 ? "Continue" : "Create Quiz"}
+              </button>
+            </div>
+          )}
+          {currentStep === 3 && quizId && (
+            <>
+              <div className={style.shareQuiz}>
+                <h2> Congrats Your quiz is Published!</h2>
+                <p>{`https://quiz-app-form.vercel.app/quizform/${quizId}`}</p>
+                <button onClick={handleShare}>
+                  <IoMdShare />
+                  Share
+                </button>
+              </div>
+            </>
+          )}
         </Modal>
       </div>
     </div>

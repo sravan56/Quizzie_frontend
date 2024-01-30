@@ -3,7 +3,6 @@ import style from "../styles/AuthForm.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 const AuthForm = () => {
   const [formType, setFormType] = useState("signup");
   const [formData, setFormData] = useState({
@@ -12,15 +11,63 @@ const AuthForm = () => {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
+
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const toggleForm = () => {
     setFormType(formType === "signup" ? "login" : "signup");
-    setError("");
+    clearErrors("");
   };
 
   const navigate = useNavigate("");
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const clearErrors = () => {
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+  };
   const handleSignup = async (userData) => {
+    const { name, email, password, confirmPassword } = userData;
+
+    clearErrors("");
+
+    const nameRegex = /^[a-zA-Z\s]+$/;
+
+    if (!name.trim()) {
+      setNameError("Name is required");
+      return;
+    }
+    if (!nameRegex.test(name.trim())) {
+      setNameError("Invalid name format. Use only alphabets");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setEmailError("Invalid email address");
+      return;
+    }
+    if (!validatePassword(password)) {
+      setPasswordError("Weak Password");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Password and confirm password not matched");
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/signup",
@@ -39,22 +86,36 @@ const AuthForm = () => {
         "http://localhost:5000/api/auth/login",
         userData
       );
-      console.log(response.data); // Handle success response
-      navigate("/dashboard");
+
+      console.log("Full Response:", response);
+      if (response.data.message==="Login successful") {
+        localStorage.setItem("authToken", response.data.token);
+        // console.log("response", response.data); // Handle success response
+        console.log("Login Successful");
+        navigate("/dashboard");
+        return true;
+      } else {
+        setEmailError(response.data.message || "Invalid Credentials");
+        console.log("Login Failed:", response.data.message || "Invalid Credentials");
+        return false;
+      }
     } catch (error) {
-      console.error(error); // Handle error
+      console.error(error);
+      setEmailError("Authentication failed. Please try again"); // Handle error
+      return false;
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+
+    clearErrors("");
 
     if (
       formType === "signup" &&
       formData.password !== formData.confirmPassword
     ) {
-      setError("Passwords do not match.");
+      setConfirmPasswordError("Passwords do not match");
       return;
     }
     try {
@@ -65,7 +126,7 @@ const AuthForm = () => {
       }
     } catch (error) {
       console.error(error);
-      setError("Authentication failed. Please try again.");
+      setEmailError("Authentication failed. Please try again.");
     }
     console.log(`Form submitted: ${formType}`, formData);
   };
@@ -103,6 +164,7 @@ const AuthForm = () => {
               onChange={handleChange}
               required
             />
+            {nameError && <p className={style.errorMessage}>{nameError}</p>}
           </div>
         )}
 
@@ -115,6 +177,7 @@ const AuthForm = () => {
             onChange={handleChange}
             required
           />
+          {emailError && <p className={style.errorMessage}>{emailError}</p>}
         </div>
 
         <div className={style.formGroup}>
@@ -126,6 +189,9 @@ const AuthForm = () => {
             onChange={handleChange}
             required
           />
+          {passwordError && (
+            <p className={style.errorMessage}>{passwordError}</p>
+          )}
         </div>
 
         {formType === "signup" && (
@@ -138,10 +204,11 @@ const AuthForm = () => {
               onChange={handleChange}
               required
             />
+            {confirmPasswordError && (
+              <p className={style.errorMessage}>{confirmPasswordError}</p>
+            )}
           </div>
         )}
-
-        {error && <p className={style.errorMessage}>{error}</p>}
 
         <button type="submit" className={style.btn}>
           {formType === "signup" ? "Sign-Up" : "Log In"}

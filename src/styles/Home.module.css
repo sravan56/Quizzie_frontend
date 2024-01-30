@@ -77,49 +77,108 @@ li:active{
     gap:20px;
 
 }
+.divContainer span{
+    font-size: 50px;
+}
 .div_1{
-    width:25%;
-    height:20vh;
-    background: #ffffff;
-    border-radius: 5px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 20px;
-    color:#FF5D01;
-   
-    
-    
-}
-.div_1 span{
-    margin:10px;
-}
-.div_1 h1{
-    margin:20px;
-    
-    
-   
-}
-.div_2{
-    width:25%;
+    width:30%;
     height:20vh;
     background: #ffffff;
     border-radius: 5px;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 20px;
-    line-height: 20px;
-    color:#60B84B;
-
+    line-height: 22px;
+    color:#FF5D01;
+   
+    
+    
 }
-.div_3{
-    width:25%;
+
+.div_2{
+    width:30%;
     height:20vh;
     background: #ffffff;
     border-radius: 5px;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 22px;
+    color:#60B84B;
+
+}
+.div_3{
+    width:30%;
+    height:20vh;
+    background: #ffffff;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
     line-height: 22px;
     color:#5076FF;
+}
+.listQuiz{
+    margin-left:10%;
+    margin-top:50px;
+
+}
+.listQuiz h2{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 22px;
+    text-align: start;
+    color:#474444;
+   
+}
+.trendQuiz{
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    row-gap: 10px;
+    
+}
+.oneQuiz{
+    background-color: white;
+    border-radius: 10px;
+    width:250px;
+    height:12vh;
+    display:flex;
+    flex-direction: column;
+}
+.oneQuiz h3{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    color:#FF5D01;
+    margin:5px 10px 0px 15px;
+    text-align: start;
+}
+.oneQuiz span{
+    color:#60B84B;
+}
+.quizDetails{
+    display:flex;
+    justify-content: space-between;
+    margin:0px 10px 0px 10px;
+}
+.quizDetails h2{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 22px;
+    margin:15px 10px 0px 10px;
+    color:#474444;
+    
+}
+.quizDetails span{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 22px;
+    color:#FF5D01;
+    margin:15px;
+   
+   
 }

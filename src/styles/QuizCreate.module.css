@@ -116,36 +116,33 @@
     display: flex;
     margin-bottom: 10px;
   }
-  .questionNavigation p{
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 22px;
-    color:#9F9F9F;
-  }
   
-  .questionNavigation button {
+  
+  .questionNavItem button {
     padding: 5px 10px;
     cursor: pointer;
     border:none;
+    outline:none;
+    
     
     
     
 
   }
   
-  .questionNavigation button.active {
+  .questionNavItem button.activeBtn{
     background-color: #ffffff;
     color: #9F9F9F;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 14px;
-    line-height: 22px;
+    line-height: 15px;
     width:50px;
-    height:100%;
+    height:50px;
     border-radius: 50%;
     box-shadow: 0px 0px 15px 0px #0000001F;
   }
+  
 
   .questionNavItem{
     display:flex;
@@ -165,11 +162,12 @@
    position:relative;
    width:15px;
    height:25px;
-   right:20px;
+   right:36px;
    border:none;
    outline:none;
    background:transparent;
    border-radius:50%;
+   box-shadow: none;
 
   }
   .questionContainer input[type="text"]{
@@ -225,6 +223,7 @@
     font-size: 14px;
     line-height: 14px;
     box-shadow: none;
+    accent-color: green;
     
 
     
@@ -232,6 +231,10 @@
     
 
   }
+  .optionContainer input[type="radio"]:checked ~input{
+    background-color: #60B84B;
+  }
+  
   .optionTypeContainer{
     display:flex;
     justify-content: space-around;
@@ -266,5 +269,57 @@
 
   .deleteIcon{
     display:block;
+    align-items: center;
+    margin:18px;
     
   }
+  .imagePreview{
+    width:30px;
+    height:5vh;
+  }
+  .shareQuiz{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .shareQuiz h2{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 32px;
+  }
+  .shareQuiz p{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    background-color:#EDEDED;
+    width:100%;
+    height:4vh;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+
+  }
+  .shareQuiz button{
+    border-radius: 5px;
+    outline:none;
+    border:none;
+    width:40%;
+    height:6vh;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;  
+    color:white;
+    background-color: #60B84B;
+    
+  }
+.shareQuiz button:active{
+  
+    background-color: #4caf50;
+    color:#ffffff;
+
+  
+}
