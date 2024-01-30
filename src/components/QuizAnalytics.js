@@ -58,7 +58,6 @@ const QuizAnalytics = () => {
         `http://localhost:5000/api/quiz/getquiz/${quizId}`
       );
       setEditQuizDetails(response.data);
-      // Open QuizCreate component for editing
       setShowCreateQuiz(true);
     } catch (error) {
       console.error("Error fetching quiz details:", error);
@@ -112,7 +111,7 @@ const QuizAnalytics = () => {
   };
 
   const handleShowQuestionAnalysis = (quizId) => {
-    // Toggle visibility of question-wise analysis for the selected quiz
+    
     setShowAnalysis("Analysis");
     setSelectedQuizId(selectedQuizId === quizId ? null : quizId);
   };

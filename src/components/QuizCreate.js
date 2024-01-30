@@ -356,7 +356,7 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
   const renderAddOptionButton = () => {
     const options = questions[currentQuestion].options;
 
-    // Only render the '+ Add Option' button if there are less than 4 options
+    
     if (options.length < 4) {
       return (
         <div className={style.optionContainer}>
@@ -373,14 +373,14 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
     updatedQuestions.splice(index, 1);
     setQuestions(updatedQuestions);
 
-    // If the deleted question was the last one, select the previous question
+    
     if (index === currentQuestion && index > 0) {
       handleSelectQuestion(index - 1);
     }
   };
 
   const handleShare = () => {
-    // Copy the quiz link to the clipboard
+    
     const quizLink = `https://quiz-app-form.vercel.app/quizform/${quizId}`;
     navigator.clipboard.writeText(quizLink);
     toast.success("Quiz link copied to clipboard!");
@@ -451,7 +451,7 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
                 <p>Max 5 questions</p>
               </div>
 
-              {/* Current Question Details */}
+             
               {currentQuestion >= 0 && (
                 <div className={style.questionContainer}>
                   <input

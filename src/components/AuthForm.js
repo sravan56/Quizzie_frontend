@@ -73,13 +73,13 @@ const AuthForm = () => {
         "http://localhost:5000/api/auth/signup",
         userData
       );
-      console.log(response.data); // Handle success response
+      console.log(response.data); 
     } catch (error) {
-      console.error(error); // Handle error
+      console.error(error); 
     }
   };
 
-  // Function to handle login
+  
   const handleLogin = async (userData) => {
     try {
       const response = await axios.post(
@@ -90,7 +90,7 @@ const AuthForm = () => {
       console.log("Full Response:", response);
       if (response.data.message==="Login successful") {
         localStorage.setItem("authToken", response.data.token);
-        // console.log("response", response.data); // Handle success response
+        
         console.log("Login Successful");
         navigate("/dashboard");
         return true;
@@ -101,7 +101,7 @@ const AuthForm = () => {
       }
     } catch (error) {
       console.error(error);
-      setEmailError("Authentication failed. Please try again"); // Handle error
+      setEmailError("Authentication failed. Please try again"); 
       return false;
     }
   };
