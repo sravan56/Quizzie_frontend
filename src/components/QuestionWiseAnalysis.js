@@ -4,7 +4,7 @@ import style from "../styles/QuestionWiseAnalysis.module.css";
 
 const QuestionWiseAnalysis = ({ quizId }) => {
   const [questionAnalysis, setQuestionAnalysis] = useState([]);
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   useEffect(() => {
     const fetchQuestionAnalysis = async () => {

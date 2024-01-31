@@ -16,7 +16,7 @@ const AuthForm = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   const toggleForm = () => {
     setFormType(formType === "signup" ? "login" : "signup");
@@ -71,7 +71,7 @@ const AuthForm = () => {
     }
     try {
       const response = await axios.post(
-        `https://quiz-backend-snowy.vercel.app/api/auth/signup`,
+        `${apiURL}/auth/signup`,
         userData
       );
       console.log(response.data);
@@ -83,7 +83,7 @@ const AuthForm = () => {
   const handleLogin = async (userData) => {
     try {
       const response = await axios.post(
-        `https://quiz-backend-snowy.vercel.app/api/auth/login`,
+        `${apiURL}/auth/login`,
         userData
       );
 

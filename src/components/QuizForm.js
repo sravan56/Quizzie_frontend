@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import style from "../styles/QuizForm.module.css";
@@ -9,8 +9,8 @@ const QuizForm = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
-  const [timer, setTimer] = useState(null);
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const [time, setTime] = useState(0);
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -43,8 +43,6 @@ const QuizForm = () => {
     }
   }, [quizId, quizData]);
 
-  console.log("QuizId", quizId);
-  
   const handleAnswer = async (isCorrect) => {
     const currentOption = quizData.questions[currentQuestion].options[0];
 
@@ -60,7 +58,7 @@ const QuizForm = () => {
     };
     try {
       await axios.post(
-        `${apiURL}}/quiz/response/${quizId}`,
+        `${apiURL}/quiz/response/${quizId}`,
         responseData
       );
       if (isCorrect) {
@@ -70,7 +68,7 @@ const QuizForm = () => {
       console.error("Error Submitting Form", error);
     }
   };
-  const handleNext = async () => {
+  const handleNext = useCallback(async () => {
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < quizData.questions.length) {
       setCurrentQuestion(nextQuestion);
@@ -94,8 +92,32 @@ const QuizForm = () => {
         responseData
       );
     }
-  };
-  
+  }, [currentQuestion, quizData, quizId]);
+
+  useEffect(() => {
+    if (quizData && quizData.questions && quizData.questions[currentQuestion]) {
+      const timerType = quizData.questions[currentQuestion].timerType;
+      const initialTime = parseInt(timerType, 10) || 0;
+      setTime(initialTime);
+
+      const interval = setInterval(() => {
+        setTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [quizData, currentQuestion]);
+
+  useEffect(() => {
+    if (
+      quizData &&
+      quizData.questions &&
+      time === 0 &&
+      currentQuestion < quizData.questions.length - 1
+    ) {
+      handleNext(); // Automatically move to next question when time reaches 00:00
+    }
+  }, [quizData, time, currentQuestion]);
 
   if (!quizData) {
     return <div>Loading...</div>;
@@ -129,7 +151,10 @@ const QuizForm = () => {
                 {currentQuestion + 1}/{quizData.questions.length}
               </span>
               {quizData.quizType === "QnA" ? (
-                <span></span>
+                <span>
+                  {String(Math.floor(time / 60)).padStart(2, "0")}:
+                  {String(time % 60).padStart(2, "0")}
+                </span>
               ) : (
                 ""
               )}

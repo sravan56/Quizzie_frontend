@@ -12,7 +12,7 @@ const Home = () => {
   const [quizCount, setQuizCount] = useState(0);
   const [questionCount, setQuestionCount] = useState(0);
   const [total, setTotal] = useState(0);
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   const [quizzes, setQuizzes] = useState([]);
   useEffect(() => {
@@ -50,9 +50,7 @@ const Home = () => {
 
   const fetchQuizzes = async () => {
     try {
-      const response = await axios.get(
-        `${apiURL}/quiz/getquiz`
-      );
+      const response = await axios.get(`${apiURL}/quiz/getquiz`);
       setQuizzes(response.data);
     } catch (error) {
       console.error("Error fetching quizzes:", error);

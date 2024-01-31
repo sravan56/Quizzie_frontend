@@ -26,7 +26,7 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [quizId, setQuizId] = useState("");
 
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   useEffect(() => {
     setIsModalOpen(isOpen);

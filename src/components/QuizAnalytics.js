@@ -19,7 +19,7 @@ const QuizAnalytics = () => {
   const [showAnalysis, setShowAnalysis] = useState("Analytics");
   const [editQuizDetails, setEditQuizDetails] = useState(null);
   const [showCreateQuiz, setShowCreateQuiz] = useState(false);
-  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+  const apiURL = "https://quizzie-5r0l.onrender.com/api";
 
   const fetchQuizzes = async () => {
     try {
