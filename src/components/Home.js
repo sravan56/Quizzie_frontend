@@ -12,21 +12,22 @@ const Home = () => {
   const [quizCount, setQuizCount] = useState(0);
   const [questionCount, setQuestionCount] = useState(0);
   const [total, setTotal] = useState(0);
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
 
   const [quizzes, setQuizzes] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/quiz/quizcount")
+      .get(`${apiURL}/quiz/quizcount`)
       .then((response) => setQuizCount(response.data.quizCount))
       .catch((error) => console.error(error));
 
     axios
-      .get("http://localhost:5000/api/quiz/questioncount")
+      .get(`${apiURL}/quiz/questioncount`)
       .then((response) => setQuestionCount(response.data.questionCount))
       .catch((error) => console.error(error));
 
     axios
-      .get("http://localhost:5000/api/quiz/totalviews")
+      .get(`${apiURL}/quiz/totalviews`)
       .then((response) => setTotal(response.data.total))
 
       .catch((error) => console.error(error));
@@ -50,7 +51,7 @@ const Home = () => {
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/quiz/getquiz"
+        `${apiURL}/quiz/getquiz`
       );
       setQuizzes(response.data);
     } catch (error) {

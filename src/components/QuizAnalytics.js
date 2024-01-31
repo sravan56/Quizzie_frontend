@@ -19,11 +19,12 @@ const QuizAnalytics = () => {
   const [showAnalysis, setShowAnalysis] = useState("Analytics");
   const [editQuizDetails, setEditQuizDetails] = useState(null);
   const [showCreateQuiz, setShowCreateQuiz] = useState(false);
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
 
   const fetchQuizzes = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/quiz/getquiz"
+        `${apiURL}/quiz/getquiz`
       );
       setQuizzes(response.data);
     } catch (error) {
@@ -55,7 +56,7 @@ const QuizAnalytics = () => {
   const handleEditQuiz = async (quizId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/quiz/getquiz/${quizId}`
+        `${apiURL}/quiz/getquiz/${quizId}`
       );
       setEditQuizDetails(response.data);
       setShowCreateQuiz(true);
@@ -79,7 +80,7 @@ const QuizAnalytics = () => {
   const handleDeleteQuiz = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/quiz/deletequiz/${quizToDelete}`
+        `${apiURL}/quiz/deletequiz/${quizToDelete}`
       );
       toast.success("Quiz deleted successfully!", {
         position: "top-right",

@@ -26,6 +26,8 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [quizId, setQuizId] = useState("");
 
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
+
   useEffect(() => {
     setIsModalOpen(isOpen);
 
@@ -35,7 +37,7 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
       setQuestions(quizDetails.questions || []);
       setQuizId(quizDetails._id);
     } else {
-      // If creating a new quiz, reset the form fields
+      
       setQuizName("");
       setQuizType("");
       setQuestions([
@@ -84,11 +86,11 @@ const QuizCreate = ({ isOpen, onRequestClose,quizDetails}) => {
       let response;
       if(quizDetails){
         response=await axios.put(
-          `http://localhost:5000/api/quiz/editquiz/${quizId}`,quizData
+          `${apiURL}/quiz/editquiz/${quizId}`,quizData
         );
       }else{
        response = await axios.post(
-        "http://localhost:5000/api/quiz/create",
+        `${apiURL}/quiz/create`,
         quizData
       );
        }

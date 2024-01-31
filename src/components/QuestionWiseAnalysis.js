@@ -4,12 +4,13 @@ import style from "../styles/QuestionWiseAnalysis.module.css";
 
 const QuestionWiseAnalysis = ({ quizId }) => {
   const [questionAnalysis, setQuestionAnalysis] = useState([]);
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
 
   useEffect(() => {
     const fetchQuestionAnalysis = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/quiz/questionwiseanalysis/${quizId}`
+          `${apiURL}/quiz/questionwiseanalysis/${quizId}`
         );
         setQuestionAnalysis(response.data);
         console.log("response", response.data);

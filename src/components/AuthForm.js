@@ -16,6 +16,7 @@ const AuthForm = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
 
   const toggleForm = () => {
     setFormType(formType === "signup" ? "login" : "signup");
@@ -70,38 +71,41 @@ const AuthForm = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/signup",
+        `https://quiz-backend-snowy.vercel.app/api/auth/signup`,
         userData
       );
-      console.log(response.data); 
+      console.log(response.data);
     } catch (error) {
-      console.error(error); 
+      console.error(error);
     }
   };
 
-  
   const handleLogin = async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `https://quiz-backend-snowy.vercel.app/api/auth/login`,
         userData
       );
 
       console.log("Full Response:", response);
-      if (response.data.message==="Login successful") {
+
+      if (response.data.message === "Login successful") {
         localStorage.setItem("authToken", response.data.token);
-        
+
         console.log("Login Successful");
         navigate("/dashboard");
         return true;
       } else {
         setEmailError(response.data.message || "Invalid Credentials");
-        console.log("Login Failed:", response.data.message || "Invalid Credentials");
+        console.log(
+          "Login Failed:",
+          response.data.message || "Invalid Credentials"
+        );
         return false;
       }
     } catch (error) {
       console.error(error);
-      setEmailError("Authentication failed. Please try again"); 
+      setEmailError("Authentication failed. Please try again");
       return false;
     }
   };

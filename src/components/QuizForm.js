@@ -9,12 +9,14 @@ const QuizForm = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+  const [timer, setTimer] = useState(null);
+  const apiURL = "https://quiz-backend-snowy.vercel.app/api";
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/quiz/getquiz/${quizId}`
+          `${apiURL}/quiz/getquiz/${quizId}`
         );
         setQuizData(response.data);
       } catch (error) {
@@ -29,7 +31,7 @@ const QuizForm = () => {
     const updateImpressions = async () => {
       try {
         await axios.post(
-          `http://localhost:5000/api/quiz/impressions/${quizId}`
+          `${apiURL}/quiz/impressions/${quizId}`
         );
       } catch (error) {
         console.error("Error updating impressions", error);
@@ -58,7 +60,7 @@ const QuizForm = () => {
     };
     try {
       await axios.post(
-        `http://localhost:5000/api/quiz/response/${quizId}`,
+        `${apiURL}}/quiz/response/${quizId}`,
         responseData
       );
       if (isCorrect) {
@@ -88,11 +90,12 @@ const QuizForm = () => {
         },
       };
       await axios.post(
-        `http://localhost:5000/api/quiz/response/${quizId}`,
+        `${apiURL}/quiz/response/${quizId}`,
         responseData
       );
     }
   };
+  
 
   if (!quizData) {
     return <div>Loading...</div>;
@@ -126,7 +129,7 @@ const QuizForm = () => {
                 {currentQuestion + 1}/{quizData.questions.length}
               </span>
               {quizData.quizType === "QnA" ? (
-                <span>{quizData.questions[currentQuestion].timerType}</span>
+                <span></span>
               ) : (
                 ""
               )}
