@@ -3,6 +3,7 @@ import style from "../styles/AuthForm.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AuthForm = () => {
   const [formType, setFormType] = useState("signup");
