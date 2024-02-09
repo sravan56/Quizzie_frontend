@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import style from "../styles/AuthForm.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const AuthForm = () => {
   const [formType, setFormType] = useState("signup");
@@ -70,10 +71,15 @@ const AuthForm = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        `${apiURL}/auth/signup`,
-        userData
-      );
+      const response = await axios.post(`${apiURL}/auth/signup`, userData);
+      toast.success("Your Signup Succesfull..You can Login now..!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -82,10 +88,7 @@ const AuthForm = () => {
 
   const handleLogin = async (userData) => {
     try {
-      const response = await axios.post(
-        `${apiURL}/auth/login`,
-        userData
-      );
+      const response = await axios.post(`${apiURL}/auth/login`, userData);
 
       console.log("Full Response:", response);
 
@@ -141,6 +144,7 @@ const AuthForm = () => {
 
   return (
     <div className={style.authContainer}>
+      <ToastContainer />
       <h1>QUIZZIE</h1>
       <div className={style.toggleButtons}>
         <button
